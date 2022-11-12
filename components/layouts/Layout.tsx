@@ -5,7 +5,7 @@ import { Navbar, Sidebar } from "../ui";
 
 interface props {
     title?: string;
-    children: JSX.Element;
+    children?: JSX.Element;
 }
 
 export const Layout: FC<props> = ({title = 'Open Jira App', children}) => {
