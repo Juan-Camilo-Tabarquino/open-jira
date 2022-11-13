@@ -2,15 +2,30 @@ import { Button, Box, TextField } from '@mui/material';
 import SaveOutlinedIcon from '@mui/icons-material/SaveOutlined';
 import AddCircleOutlineOutlinedIcon from '@mui/icons-material/AddCircleOutlineOutlined';
 import { ChangeEvent, useState } from 'react';
+import { UseEntryStore, UseUiStore } from '../../hooks';
 
 export const NewEntry = () => {
 
-  const [isAdding, setIsAdding] = useState(false)
+//   const [isAdding, setIsAdding] = useState(false)
   const [inputValue, setInputValue] = useState('');
   const [touched, setTouched] = useState(false);
 
   const onInputChange = (event: ChangeEvent<HTMLInputElement>) => {
     setInputValue(event.target.value);
+  }
+  
+  const { isAdding, startAddingEntry } = UseUiStore();
+  const { startAddNewEntry } = UseEntryStore();
+
+  const onSubmit = () =>{
+
+    if(inputValue.length === 0) return;
+
+    startAddNewEntry(inputValue);
+    startAddingEntry(false);
+    setTouched(false);
+    setInputValue('');
+
   }
 
   return (
@@ -43,13 +58,14 @@ export const NewEntry = () => {
                             variant='outlined'
                             color='secondary'
                             endIcon={<SaveOutlinedIcon/>}
+                            onClick={onSubmit}
                             >
                             Guardar
                         </Button>
                         <Button
                             variant='outlined'
                             color='secondary'
-                            onClick={() => setIsAdding(false)}
+                            onClick={() => {startAddingEntry(false); setTouched(false);}}
                         >
                             Cancelar
                         </Button>
@@ -62,7 +78,7 @@ export const NewEntry = () => {
                         startIcon={<AddCircleOutlineOutlinedIcon/>}
                         fullWidth
                         variant='outlined'
-                        onClick={() => setIsAdding(true)}
+                        onClick={()=>startAddingEntry(true)}
                     >
                         Agregar Tarea
                     </Button>

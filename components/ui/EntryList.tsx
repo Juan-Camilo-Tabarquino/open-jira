@@ -1,9 +1,10 @@
-import { FC, useMemo } from 'react';
+import { FC, useMemo, DragEvent } from 'react';
 import { Paper, List } from '@mui/material';
 import { EntryStatus } from '../../interfaces';
 import { EntryCard } from './EntryCard';
-import { UseEntryStore } from '../../hooks';
+import { UseEntryStore, UseUiStore } from '../../hooks';
 
+import styles from './EntryList.module.css'
 
 interface props {
     status: EntryStatus,
@@ -15,11 +16,25 @@ export const EntryList:FC<props> = ({status}) => {
   const { entries } = UseEntryStore();
   const entriesByStatus = useMemo( () => entries.filter( entry => entry.status === status) ,[entries]) 
   
-  return (
-    <div>
-        <Paper sx={{ height: 'calc(100vh - 250px)', backgroundColor: 'transparent', padding: 1}}>
+  const { isDragging } = UseUiStore();
 
-            <List sx={{opacity: 1}}>
+  const onDropEntry = (event: DragEvent<HTMLDivElement>) => {
+    const id: string = event.dataTransfer.getData('Id')
+  }
+
+  const allowDrop = (event: DragEvent<HTMLDivElement>) => {
+    event.preventDefault();
+  }
+
+  return (
+    <div
+        onDrop={ onDropEntry } 
+        onDragOver= { allowDrop }
+        className = { isDragging ? styles.dragging : '' }
+    >
+        <Paper sx={{ height: 'calc(100vh - 200px)', backgroundColor: 'transparent', padding: 1}}>
+
+            <List sx={{opacity: isDragging ? 0.2 : 1, transition: 'all .3s'}}>
                 {
                     entriesByStatus.map( entry => (
                             <EntryCard key={entry._id} entry={entry}/>

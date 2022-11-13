@@ -1,5 +1,4 @@
-import { createSlice } from '@reduxjs/toolkit';
-import { v4 as uuidv4 } from 'uuid';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { Entry } from '../../interfaces/entry';
 
 const entries: Entry[] = [ 
@@ -29,10 +28,10 @@ export const entriesSlice = createSlice({
         entries,
       },
       reducers:{
-           increment: (state) =>{
-              state.entries = []
+           addEntry: (state, action: PayloadAction<Entry>) =>{
+              state.entries = [...state.entries, action.payload]
             },
        }
 })
 
-export const { increment } = entriesSlice.actions
+export const { addEntry } = entriesSlice.actions
