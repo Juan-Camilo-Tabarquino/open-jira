@@ -13,13 +13,22 @@ interface props {
 
 export const EntryList:FC<props> = ({status}) => {
 
-  const { entries } = UseEntryStore();
+  const { entries, onEntryUpdated } = UseEntryStore();
   const entriesByStatus = useMemo( () => entries.filter( entry => entry.status === status) ,[entries]) 
-  
+  const { toogleIsDragging } = UseUiStore();
   const { isDragging } = UseUiStore();
 
   const onDropEntry = (event: DragEvent<HTMLDivElement>) => {
-    const id: string = event.dataTransfer.getData('Id')
+    const id: string = event.dataTransfer.getData('Id');
+
+    const entry = entries.find(e => e._id === id)!;
+
+    const uEntry = {
+      ...entry,
+      status
+    }
+    onEntryUpdated(uEntry);
+    toogleIsDragging(false);
   }
 
   const allowDrop = (event: DragEvent<HTMLDivElement>) => {

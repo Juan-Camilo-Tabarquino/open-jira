@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { Entry } from '../../interfaces/entry';
+import { Entry, EntryStatus } from '../../interfaces/entry';
 
 const entries: Entry[] = [ 
     {
@@ -31,7 +31,18 @@ export const entriesSlice = createSlice({
            addEntry: (state, action: PayloadAction<Entry>) =>{
               state.entries = [...state.entries, action.payload]
             },
+            updateStatus: (state, action: PayloadAction<Entry>) =>{
+             state.entries = state.entries.map(entry =>{
+
+                if(entry._id === action.payload._id){
+                    entry.status = action.payload.status;
+                    entry.description = action.payload.description;
+                }
+
+                return entry;
+             })
+            }
        }
 })
 
-export const { addEntry } = entriesSlice.actions
+export const { addEntry, updateStatus } = entriesSlice.actions
